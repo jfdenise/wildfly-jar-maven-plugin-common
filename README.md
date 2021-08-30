@@ -1,0 +1,1 @@
+# wildfly-maven-plugins-common
