@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2016-2021 Red Hat, Inc. and/or its affiliates
+    and other contributors as indicated by the @author tags.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>37</version>
+    </parent>
+
+    <groupId>org.wildfly.plugins</groupId>
+    <artifactId>wildfly-jar-maven-plugin-common-parent</artifactId>
+    <version>1.0.0.Final-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>WildFly Bootable JAR / Server Plugin Common Parent</name>
+    <inceptionYear>2021</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>plugin-common</module>
+        <module>tests-common</module>
+    </modules>
+
+    <properties>
+        <version.junit>4.13.1</version.junit>
+        <version.org.apache.maven.core>3.3.1</version.org.apache.maven.core>
+        <version.org.apache.maven.plugin-tools>3.5.1</version.org.apache.maven.plugin-tools>
+        <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
+        <version.org.wildfly.plugins.wildfly-maven-plugin>2.0.1.Final</version.org.wildfly.plugins.wildfly-maven-plugin>
+        <!-- required by tests -->
+        <surefire.redirect.to.file>true</surefire.redirect.to.file>
+        <version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
+        <version.org.jboss.logging.slf4j-jboss-logging>1.1.0.Final</version.org.jboss.logging.slf4j-jboss-logging>
+        <version.org.apache.maven.plugin-testing.maven-plugin-testing-harness>3.3.0
+        </version.org.apache.maven.plugin-testing.maven-plugin-testing-harness>
+        <!-- Checkstyle configuration -->
+        <linkXRef>false</linkXRef>
+        <version.org.wildfly.checkstyle-config>1.0.8.Final</version.org.wildfly.checkstyle-config>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wildfly-jar-maven-plugin-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.galleon</groupId>
+                <artifactId>galleon-maven-plugin</artifactId>
+                <version>${version.org.jboss.galleon}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${version.org.apache.maven.core}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.checkstyle</groupId>
+                <artifactId>wildfly-checkstyle-config</artifactId>
+                <version>${version.org.wildfly.checkstyle-config}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${version.org.wildfly.plugins.wildfly-maven-plugin}</version>
+            </dependency>
+      
+            <!-- Needed by tests -->
+            <dependency>
+                <groupId>org.apache.maven.plugin-testing</groupId>
+                <artifactId>maven-plugin-testing-harness</artifactId>
+                <version>${version.org.apache.maven.plugin-testing.maven-plugin-testing-harness}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${version.org.apache.httpcomponents.httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.slf4j</groupId>
+                <artifactId>slf4j-jboss-logging</artifactId>
+                <version>${version.org.jboss.logging.slf4j-jboss-logging}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+  
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly.checkstyle</groupId>
+            <artifactId>wildfly-checkstyle-config</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Checkstyle -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${version.checkstyle.plugin}</version>
+                    <configuration>
+                        <configLocation>wildfly-checkstyle/checkstyle.xml</configLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>true</failsOnError>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <excludes>**/*$logger.java,**/*$bundle.java,**/HelpMojo.java</excludes>
+                        <useFile />
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.wildfly.checkstyle</groupId>
+                            <artifactId>wildfly-checkstyle-config</artifactId>
+                            <version>${version.org.wildfly.checkstyle-config}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>check-style</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>checkstyle</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+      
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>1.8</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
